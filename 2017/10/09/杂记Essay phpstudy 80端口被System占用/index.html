@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8" />
+  
+  <title>杂记Essay: phpstudy 80端口被System占用 | 0aspiring0 Paradise</title>
+  <meta name="author" content="0aspiring0" />
+
+  
+  <meta name="description" content="BLOG 1.0.0" />
+  
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+  <meta property="og:title" content="杂记Essay: phpstudy 80端口被System占用" />
+  <meta property="og:site_name" content="0aspiring0 Paradise" />
+
+  
+  
+
+  
+    <meta property="og:image" content="" />
+  
+
+  
+  <link href="/css/images/favicon.ico" rel="icon" />
+  
+
+  <link rel="alternate" href="/atom.xml" title="0aspiring0 Paradise" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">0aspiring0 Paradise</a></h1>
+  <h2><a href="/">Here is where you are. Nothing is impossible.</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/tags/wp">Wp</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2017-10-09T15:00:00.000Z"><a href="/2017/10/09/杂记Essay phpstudy 80端口被System占用/">2017-10-09</a></time>
+      
+      
+  
+    <h1 class="title">杂记Essay: phpstudy 80端口被System占用</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>#杂记Essay: phpstudy 80端口被System占用</p>
+<p>@(杂记Essay)[phpstudy, 80端口]</p>
+<p>首先要弄清楚是什么导致了80端口被占用，其次是根据对应的原因来解决80端口被占用的问题。（系统都是以win10为准）</p>
+<p>[TOC]</p>
+<p>##0x00 查看80端口被什么进程给占用了</p>
+<p>用cmd（命令行/DOS）运行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netstat -ano|findstr &quot;80&quot;</div></pre></td></tr></table></figure>
+<p>查看是那个进程占用了80端口，我遇到的是System PID 4占用了。</p>
+<p><img src="../../../images/essay/sysPID4.jpg" alt="sysPID4"></p>
+<p>发现是PID 4 的（其实是System）占用了，进一步查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tasklist|findstr &quot;4&quot;</div></pre></td></tr></table></figure>
+<p>就是System：</p>
+<p><img src="../../../images/essay/sysPID4-2.jpg" alt="sysPID4-2"></p>
+<p>##0x01 Solution 1: 修改端口 </p>
+<h4 id="POINT-1-phpstudy自带的修改工具"><a href="#POINT-1-phpstudy自带的修改工具" class="headerlink" title="POINT 1.  phpstudy自带的修改工具"></a>POINT 1.  phpstudy自带的修改工具</h4><p>打开phpstudy面板：</p>
+<p>​    其他选项菜单 —&gt; phpstudy 设置 —&gt;  端口常规设置</p>
+<p>​    <img src="../../../images/essay/phpstudy端口改.jpg" alt="phpstudy端口改"></p>
+<p>打开后修改为其他的端口就可以了，最好是偏僻的端口（直接随意改就可以了）</p>
+<pre><code>#### POINT 2.  phpstudy配置文件httpd.conf修改
+</code></pre><p>打开phpstudy面板：</p>
+<p>​    其他选项菜单 —&gt; 打开配置文件 —&gt;  httpd.conf</p>
+<p>找到Listen 80,修改80，改成其他的端口就可以了。</p>
+<h2 id="0x03-Solution-2-关闭占用端口的System"><a href="#0x03-Solution-2-关闭占用端口的System" class="headerlink" title="0x03 Solution 2. 关闭占用端口的System"></a>0x03 Solution 2. 关闭占用端口的System</h2><p>打开任务管理器（ctrl+alt+del）后选择“详细信息”选项（菜单栏上面），选中PID的表头，让其按照PID排序后，</p>
+<p><img src="../../../images/essay/PID排序.jpg" alt="PID排序"><br>找到PID为4的System进程并<font color="red">选中</font>，点击下面的“结束任务”</p>
+<p>但是如果出现对话框表示无法进行此操作关闭进程或者提示这是系统进程会损伤系统的话可以采取方法3.</p>
+<p>##0x04 Solution 3: 关闭SQL Server Reporting Services(MSSQLSERVER) </p>
+<p>System进程频繁占用80端口并且前面两种方法都无法解决，那么可能是大型的系统程序造成的。通常是SQL Server了。刚才查询进程时候，发现占用80端口的是SQL Server的组件之一：SQL Server Reporting Services(MSSQLSERVER)。关闭这个的话也可以回复80端口使用</p>
+<p>打开运行，输入services.msc，找到SQL Server Reporting Services(MSSQLSERVER), 右键点开选择停止，并且在启动类型处选择手动或者禁用模式。(具体见下图)</p>
+<p><img src="../../../images/essay/禁用sqlserver组件.jpg" alt="禁用sqlserver组件"></p>
+<h2 id="0x05-Solution-4-关闭IIS服务"><a href="#0x05-Solution-4-关闭IIS服务" class="headerlink" title="0x05 Solution 4:  关闭IIS服务"></a>0x05 Solution 4:  关闭IIS服务</h2><p>除了方法3中的情况以外，还有可能是microsoft的iis服务造成的。这个可以去控制面板弄：</p>
+<p>控制面板 –&gt; 程序 —&gt; 程序和功能</p>
+<p>点击左边“启动或关闭windows功能”，弹出的菜单框中找到“internet information services”，取消选中“Web管理工具”，并且保证其子菜单都没有选中。</p>
+<h2 id="0x06-参考文献"><a href="#0x06-参考文献" class="headerlink" title="0x06 参考文献"></a>0x06 参考文献</h2><p> 参考了下面的博文，才知道了这些方法，对他们的作者非常感谢。</p>
+
+      
+    </div>
+    
+    <footer>
+        <div class="alignright">
+          
+          <a href='javascript:void(0)' class="share-link bdsharebuttonbox" data-cmd="more">分享</a>
+        </div>
+        
+  
+  <div class="categories">
+    <a href="/categories/Essays/">Essays</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/phpstudy/">phpstudy</a>, <a href="/tags/80端口/">80端口</a>
+  </div>
+
+        <!-- partial('post/share') -->
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:aiapple97.github.io">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Essays/">Essays</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2017/10/09/杂记Essay phpstudy 80端口被System占用/">杂记Essay: phpstudy 80端口被System占用</a>
+      </li>
+    
+      <li>
+        <a href="/2017/10/07/新手小白用hexo-github建立自己的blog/">新手小白用hexo+github建立自己的blog</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/80端口/">80端口</a><small>1</small></li>
+  
+    <li><a href="/tags/phpstudy/">phpstudy</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">Tag Cloud</h3>
+  <div class="entry">
+    <a href="/tags/80端口/" style="font-size: 10px;">80端口</a> <a href="/tags/phpstudy/" style="font-size: 10px;">phpstudy</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  <p>
+  
+  &copy; 2017 0aspiring0
+  
+  All rights reserved.</p>
+  <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</div>
+<div class="clearfix"></div>
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script></footer>
+  <script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<div id='bg'></div>
+</body>
+</html>
