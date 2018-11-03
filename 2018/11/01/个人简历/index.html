@@ -7,16 +7,39 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>DVWA 之小白学习NOTES--SQL注入 | 0aspir1ng0 Paradise</title>
+    <title>个人简历 | 0aspir1ng0 Paradise</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="0aspir1ng0">
     
-    <meta name="description" content="by 0aspiring0
-DVWA 渗透教程 新手 学习笔记 
-0x00 SQL注入是啥哟
-SQL是一门数据库的语言，数据库有很多种那么语言也有很多种，但是基本的框架都是SQL为基础的。要想获得数据，就要从数据库入手，SQL注入的思想就是从与数据库交互的地方入手。
-POINT 1. SQL注入一二">
+    <meta name="description" content="姓名
+曹媚杨
+性别
+女
+电话
+13281897038
+
+
+
+
+QQ
+294612648
+博客
+0aspir1ng0.club
+学历
+成都信息工程大学
+
+
+邮箱
+13281897038@163.com
+Github
+aiapple97
+
+
+
+
+个人介绍
+于2016年9月入学，现在是大三学生。在大二学年">
     
     
     
@@ -86,15 +109,15 @@ POINT 1. SQL注入一二">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/03/06/DVWA 之小白学习NOTES--SQL注入/" title="DVWA 之小白学习NOTES--SQL注入" itemprop="url">DVWA 之小白学习NOTES--SQL注入</a>
+      <a href="/2018/11/01/个人简历/" title="个人简历" itemprop="url">个人简历</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://aiapple97.github.io" title="0aspir1ng0">0aspir1ng0</a>
     </p>
   <p class="article-time">
-    <time datetime="2018-03-05T18:02:48.152Z" itemprop="datePublished">2018-03-06</time>
-    更新日期:<time datetime="2018-03-05T17:59:26.902Z" itemprop="dateModified">2018-03-06</time>
+    <time datetime="2018-11-01T13:42:35.000Z" itemprop="datePublished">2018-11-01</time>
+    更新日期:<time datetime="2018-11-03T05:32:58.293Z" itemprop="dateModified">2018-11-03</time>
     
   </p>
 </header>
@@ -103,32 +126,173 @@ POINT 1. SQL注入一二">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-SQL注入是啥哟"><span class="toc-number">1.</span> <span class="toc-text">0x00 SQL注入是啥哟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-SQL注入一二三"><span class="toc-number">1.1.</span> <span class="toc-text">POINT 1. SQL注入一二三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-LOW-级别"><span class="toc-number">2.</span> <span class="toc-text">0x01 LOW 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析"><span class="toc-number">2.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-参考文献"><span class="toc-number">3.</span> <span class="toc-text">0x02 参考文献</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#个人介绍"><span class="toc-number">1.</span> <span class="toc-text">个人介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#技能点（熟悉-gt-掌握-gt-了解）"><span class="toc-number">2.</span> <span class="toc-text">技能点（熟悉>掌握>了解）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个人经历（证书、比赛、项目）"><span class="toc-number">3.</span> <span class="toc-text">个人经历（证书、比赛、项目）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备注"><span class="toc-number">4.</span> <span class="toc-text">备注</span></a></li></ol>
 		</div>
 		
-		<p><strong>by 0aspiring0</strong></p>
-<p><code>DVWA</code> <code>渗透教程</code> <code>新手</code> <code>学习笔记</code> </p>
-<h2 id="0x00-SQL注入是啥哟"><a href="#0x00-SQL注入是啥哟" class="headerlink" title="0x00 SQL注入是啥哟"></a>0x00 SQL注入是啥哟</h2><hr>
-<p>SQL是一门数据库的语言，数据库有很多种那么语言也有很多种，但是基本的框架都是SQL为基础的。要想获得数据，就要从数据库入手，SQL注入的思想就是从与数据库交互的地方入手。</p>
-<h3 id="POINT-1-SQL注入一二三"><a href="#POINT-1-SQL注入一二三" class="headerlink" title="POINT 1. SQL注入一二三"></a>POINT 1. SQL注入一二三</h3><ol>
-<li><p>SQL注入有哪些呢？</p>
-<p>联合查询注入，报错注入，布尔型注入，多语句查询注入以及时间型注入</p>
-</li>
-<li><p>SQL注入中报错是啥？干嘛的？</p>
-<p>报错是为了用不符合格式的sql语句的来获取实际正确的语句</p>
-</li>
-<li><p>如何开始一场SQL注入？</p>
-<p>判断是否有注入点，找到注入点，猜测字段数，判断敏感的字段有哪些，爆库，爆表，爆字段名，爆字段信息。</p>
-</li>
-</ol>
-<h2 id="0x01-LOW-级别"><a href="#0x01-LOW-级别" class="headerlink" title="0x01 LOW 级别"></a>0x01 LOW 级别</h2><hr>
-<h3 id="POINT-1-源码分析"><a href="#POINT-1-源码分析" class="headerlink" title="POINT 1. 源码分析"></a>POINT 1. 源码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_REQUEST[ <span class="string">'Submit'</span> ] ) ) &#123;</div><div class="line">	<span class="comment">// Get input</span></div><div class="line">	$id = $_REQUEST[ <span class="string">'id'</span> ];</div><div class="line"></div><div class="line">	<span class="comment">// Check database</span></div><div class="line">	$query  = <span class="string">"SELECT first_name, last_name FROM users WHERE user_id = '$id';"</span>;</div><div class="line">	$result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</div><div class="line"></div><div class="line">	<span class="comment">// Get results</span></div><div class="line">	<span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</div><div class="line">		<span class="comment">// Get values</span></div><div class="line">		$first = $row[<span class="string">"first_name"</span>];</div><div class="line">		$last  = $row[<span class="string">"last_name"</span>];</div><div class="line"></div><div class="line">		<span class="comment">// Feedback for end user</span></div><div class="line">		$html .= <span class="string">"&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
-<p>​    没有任何过滤，直接可以注入。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//测试语句构造：</span></div><div class="line">  admin<span class="string">'</span></div><div class="line"><span class="string">//判断字段:</span></div><div class="line"><span class="string"> admin'</span> order by <span class="number">2</span><span class="comment">#</span></div></pre></td></tr></table></figure>
-<h2 id="0x02-参考文献"><a href="#0x02-参考文献" class="headerlink" title="0x02 参考文献"></a>0x02 参考文献</h2><hr>
+		<hr>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">姓名</th>
+<th style="text-align:center">曹媚杨</th>
+<th style="text-align:center">性别</th>
+<th style="text-align:center">女</th>
+<th style="text-align:center">电话</th>
+<th style="text-align:center">13281897038</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">QQ</td>
+<td style="text-align:center">294612648</td>
+<td style="text-align:center">博客</td>
+<td style="text-align:center"><a href="0aspir1ng0.club">0aspir1ng0.club</a></td>
+<td style="text-align:center">学历</td>
+<td style="text-align:center">成都信息工程大学</td>
+</tr>
+<tr>
+<td style="text-align:center">邮箱</td>
+<td style="text-align:center">13281897038@163.com</td>
+<td style="text-align:center">Github</td>
+<td style="text-align:center"><a href="https://github.com/aiapple97" target="_blank" rel="external">aiapple97</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="个人介绍"><a href="#个人介绍" class="headerlink" title="个人介绍"></a>个人介绍</h3><hr>
+<p>于2016年9月入学，现在是大三学生。在大二学年开始正式了解到信息安全，之后不久开始学习Web安全。目前是三叶草技术小组、易控实验室、loop实验室的成员，同时现在已经较优秀通过了英语四六级、计算机二级，现今已经获得过三好学生、特等奖学金，参与了第九届极客大挑战的出题。</p>
+<h3 id="技能点（熟悉-gt-掌握-gt-了解）"><a href="#技能点（熟悉-gt-掌握-gt-了解）" class="headerlink" title="技能点（熟悉&gt;掌握&gt;了解）"></a>技能点（熟悉&gt;掌握&gt;了解）</h3><hr>
 <ul>
-<li><a href="http://www.freebuf.com/articles/web/120747.html" target="_blank" rel="external">新手指南：DVWA-1.9全级别教程之SQL Injection</a></li>
+<li>熟悉HTML、CSS；了解Javascript。</li>
+<li>掌握Python；了解PHP。</li>
+<li>熟练阅读英文文献、能够流畅使用英语进行交流（书写和口语）。</li>
+<li>较熟悉使用github。</li>
+<li>掌握文件上传、文件包含、XSS、反序列化、SQL注入漏洞、CSRF的原理、防御措施和部分绕过方法。</li>
+<li>掌握BurpSuite的基本功能；了解kali的基本功能。</li>
+<li>参加过多次的CTF比赛，对Web和MISC题目有一定思路。 </li>
 </ul>
+<h3 id="个人经历（证书、比赛、项目）"><a href="#个人经历（证书、比赛、项目）" class="headerlink" title="个人经历（证书、比赛、项目）"></a>个人经历（证书、比赛、项目）</h3><hr>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">时间</th>
+<th style="text-align:center">证书或比赛或项目名称</th>
+<th style="text-align:center">等级或分数或名次</th>
+<th style="text-align:center">证书编号或参赛团队等备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2016年11月</td>
+<td style="text-align:center">全国大学英语四级考试</td>
+<td style="text-align:center">521</td>
+<td style="text-align:center">162151006002998</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年3月</td>
+<td style="text-align:center">全国计算机等级考试二级</td>
+<td style="text-align:center">合格</td>
+<td style="text-align:center">244485105754147</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年6月</td>
+<td style="text-align:center">全国大学英语六级考试</td>
+<td style="text-align:center">492</td>
+<td style="text-align:center">510060171204507</td>
+</tr>
+<tr>
+<td style="text-align:center">17年7-8月</td>
+<td style="text-align:center">参与易控实验室官网制作</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Web前端</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年8月</td>
+<td style="text-align:center">全国大学生电子设计竞赛</td>
+<td style="text-align:center">四川省二等奖</td>
+<td style="text-align:center">成员</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年10月</td>
+<td style="text-align:center">2017年第八届极客大挑战</td>
+<td style="text-align:center">T0P 20</td>
+<td style="text-align:center">TimeOops队长</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年12月</td>
+<td style="text-align:center">第十三届计算机技能大赛网络安全赛（四川师范大学）</td>
+<td style="text-align:center">三等奖</td>
+<td style="text-align:center">–</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年12月</td>
+<td style="text-align:center">三好学生</td>
+<td style="text-align:center">校级</td>
+<td style="text-align:center">–</td>
+</tr>
+<tr>
+<td style="text-align:center">2017年12月</td>
+<td style="text-align:center">特等奖学金</td>
+<td style="text-align:center">校级</td>
+<td style="text-align:center">–</td>
+</tr>
+<tr>
+<td style="text-align:center">17年12月-18年3月</td>
+<td style="text-align:center">参与loop实验室官网制作</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Web前端</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年3月</td>
+<td style="text-align:center">第二届“强网杯”全国网络安全挑战赛线上赛</td>
+<td style="text-align:center">优秀奖（TOP 136）</td>
+<td style="text-align:center">江师傅带我们飞战队成员</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年4月</td>
+<td style="text-align:center">2018年大学生创新创业项目（易表格）</td>
+<td style="text-align:center">省级</td>
+<td style="text-align:center">负责人</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年4月</td>
+<td style="text-align:center">2018年大学生创新创业项目（无忧飞）</td>
+<td style="text-align:center">省级</td>
+<td style="text-align:center">成员</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年6月</td>
+<td style="text-align:center">2018年“创青春”大学生创新创业大赛</td>
+<td style="text-align:center">四川省铜奖</td>
+<td style="text-align:center">成员</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年7月</td>
+<td style="text-align:center">2018年“巅峰极客”网络安全技能挑战赛线上赛</td>
+<td style="text-align:center">TOP 77</td>
+<td style="text-align:center">TimeOops队长</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年8月</td>
+<td style="text-align:center">2018年“网鼎杯”网络安全大赛线上赛</td>
+<td style="text-align:center">TOP 65</td>
+<td style="text-align:center">TimeOops队长</td>
+</tr>
+<tr>
+<td style="text-align:center">2018年9月</td>
+<td style="text-align:center">2018年第九届极客大挑战</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">MISC出题人之一</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><hr>
+<p>基本了解渗透测试实战流程，多次CTF参与和获奖，个人希望面试实习渗透测试岗</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -138,7 +302,7 @@ POINT 1. SQL注入一二">
 
 <div class="article-share" id="share">
 
-  <div data-url="http://aiapple97.github.io/2018/03/06/DVWA 之小白学习NOTES--SQL注入/" data-title="DVWA 之小白学习NOTES--SQL注入 | 0aspir1ng0 Paradise" data-tsina="15608194038" class="share clearfix">
+  <div data-url="http://aiapple97.github.io/2018/11/01/个人简历/" data-title="个人简历 | 0aspir1ng0 Paradise" data-tsina="15608194038" class="share clearfix">
   </div>
 
 </div>
@@ -147,19 +311,11 @@ POINT 1. SQL注入一二">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/11/01/搭建属于自己的博客/" title="搭建属于自己的博客">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  搭建属于自己的博客</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/03/06/DVWA 之小白学习NOTES--暴力破解/"  title="DVWA 之小白学习NOTES--暴力破解">
+<a href="/2018/11/01/Candence SPB 16.6 安装和破解教程/"  title="Candence SPB 16.6 安装和破解教程">
  <strong>NEXT:</strong><br/> 
- <span>DVWA 之小白学习NOTES--暴力破解
+ <span>Candence SPB 16.6 安装和破解教程
 </span>
 </a>
 </div>
@@ -169,7 +325,7 @@ POINT 1. SQL注入一二">
 	
 <section class="comment">
 	
-	<div class="ds-thread" data-title="DVWA 之小白学习NOTES--SQL注入" data-thread-key="DVWA 之小白学习NOTES--SQL注入" data-author-key="0aspir1ng0" data-url="http://aiapple97.github.io/post/DVWA 之小白学习NOTES--SQL注入"></div>
+	<div class="ds-thread" data-title="个人简历" data-thread-key="个人简历" data-author-key="0aspir1ng0" data-url="http://aiapple97.github.io/post/个人简历"></div>
 	
 </section>
 
@@ -179,7 +335,7 @@ POINT 1. SQL注入一二">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-SQL注入是啥哟"><span class="toc-number">1.</span> <span class="toc-text">0x00 SQL注入是啥哟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-SQL注入一二三"><span class="toc-number">1.1.</span> <span class="toc-text">POINT 1. SQL注入一二三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-LOW-级别"><span class="toc-number">2.</span> <span class="toc-text">0x01 LOW 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析"><span class="toc-number">2.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-参考文献"><span class="toc-number">3.</span> <span class="toc-text">0x02 参考文献</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#个人介绍"><span class="toc-number">1.</span> <span class="toc-text">个人介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#技能点（熟悉-gt-掌握-gt-了解）"><span class="toc-number">2.</span> <span class="toc-text">技能点（熟悉>掌握>了解）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个人经历（证书、比赛、项目）"><span class="toc-number">3.</span> <span class="toc-text">个人经历（证书、比赛、项目）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#备注"><span class="toc-number">4.</span> <span class="toc-text">备注</span></a></li></ol>
   </div>
 
 <div id="asidepart">
