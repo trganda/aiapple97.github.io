@@ -12,8 +12,8 @@
     
     <meta name="author" content="0aspir1ng0">
     
-    <meta name="description" content="本文是《GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil》的翻译文章
-前言最近，我注意到个正在接管的项目的一个功能，这个功能就是它允许热连接到任意gif图片上并且不用通过把gif导入、修改、保存下来就可以实现为我">
+    <meta name="description" content="本文是《GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil》的翻译文章，首发地址为：https://xz.aliyun.com/t/3370
+前言最近，我注意到个正在接管的项目的一个功能，这个功能就是它允许热连接到">
     
     
     
@@ -91,7 +91,7 @@
     </p>
   <p class="article-time">
     <time datetime="2018-11-24T05:06:30.000Z" itemprop="datePublished">2018-11-24</time>
-    Updated:<time datetime="2018-11-24T05:12:55.774Z" itemprop="dateModified">2018-11-24</time>
+    Updated:<time datetime="2018-11-24T05:35:20.823Z" itemprop="dateModified">2018-11-24</time>
     
   </p>
 </header>
@@ -103,7 +103,7 @@
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞挖掘"><span class="toc-number">2.</span> <span class="toc-text">漏洞挖掘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞演示"><span class="toc-number">3.</span> <span class="toc-text">漏洞演示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞恶意代码执行与EXP"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞恶意代码执行与EXP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
 		</div>
 		
-		<p>本文是《<a href="https://0x00sec.org/t/gif-javascript-polyglots-abusing-gifs-tags-and-mime-types-for-evil/5088" target="_blank" rel="external">GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil</a>》的翻译文章</p>
+		<p>本文是《<a href="https://0x00sec.org/t/gif-javascript-polyglots-abusing-gifs-tags-and-mime-types-for-evil/5088" target="_blank" rel="external">GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil</a>》的翻译文章，首发地址为：<a href="https://xz.aliyun.com/t/3370" target="_blank" rel="external">https://xz.aliyun.com/t/3370</a></p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，我注意到个正在接管的项目的一个功能，这个功能就是它允许热连接到任意gif图片上并且不用通过把gif导入、修改、保存下来就可以实现为我们所用的目的。既然这个功能如此方便，我猜，它可能并不安全，于是马上就想利用它找些可以导致漏洞方法来测试。最简单也是最明显的方法就是先链接到一张普通图片上，过一会再换成另外一个看上去更平淡无奇的图片。这简直是小儿科哈，是不是？那我们就来搞点事情。这里先剧透下：我确实真的搞事了，但是没想到会搞得那么大动静以至于让它变得“大规模杀伤化”了。</p>
 <p>在证明了我可以很容易地从我控制的服务器上交换图像之后，我开始寻找能将可执行文件嵌入到图片中的办法，于是偶然间，我发现了利用polyglots达到目的的方法。关于这点中的polyglot，它是一段允许两种或两种语言以上显示的代码。本文的测试用例中，我们用到的是gif/javascript polyglot。</p>
 <h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><p>像往常一样，我一般先去Google上搜下看有没有什么相关结果，或者上IRC问问。我有种预感，之前肯定有人做过这样的测试，所以我就去找相关论文或博文、帖子或者任何引导我发现这方面知识点的文章，很快，我就找到了一些既阐述了攻击原理又讲解了如何构造恶意gif文件的资源。</p>
