@@ -1,0 +1,579 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN/����">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  
+    <title>DVWA 之小白学习NOTES--暴力破解 | 0aspir1ng0 Paradise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="0aspir1ng0">
+    
+    <meta name="description" content="DVWA  靶场 
+0x00 暴力破解是啥？
+一看就是和名字一样，就是用字典通过穷举法一个个去猜用户名和密码等等。说到暴力破解，自然会想到burpsuite，一般借助burpsuite来进行爆破，破解密码。
+0x01 burpsuite 的爆破解说
+POINT 1. burpsuite 的爆破方式
+">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="0aspir1ng0 Paradise" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/logo2.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='391982416296a0d54221f59fe35250d4';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="0aspir1ng0 Paradise">0aspir1ng0 Paradise</a></h1>
+				<a class="blog-motto">Here is where you are. Nothing is impossible.</a>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tech">Techology</a></li>
+					
+						<li><a href="/life">Life</a></li>
+					
+						<li><a href="/others">Others</a></li>
+					
+						<li><a href="/About-Me">About-Me</a></li>
+					
+					<li>
+					
+                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+					
+					</li>
+				</ul>
+                            </nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/11/08/DVWA 之小白学习NOTES--暴力破解/" title="DVWA 之小白学习NOTES--暴力破解" itemprop="url">DVWA 之小白学习NOTES--暴力破解</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://aiapple97.github.io" title="0aspir1ng0">0aspir1ng0</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2018-11-08T13:01:46.000Z" itemprop="datePublished">2018-11-08</time>
+    Updated:<time datetime="2018-11-17T14:01:49.456Z" itemprop="dateModified">2018-11-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-暴力破解是啥？"><span class="toc-number">1.</span> <span class="toc-text">0x00 暴力破解是啥？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-burpsuite-的爆破解说"><span class="toc-number">2.</span> <span class="toc-text">0x01 burpsuite 的爆破解说</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-burpsuite-的爆破方式"><span class="toc-number">2.1.</span> <span class="toc-text">POINT 1. burpsuite 的爆破方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-burpsuite-自带字典"><span class="toc-number">2.2.</span> <span class="toc-text">POINT 2. burpsuite 自带字典</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-3-自制字典"><span class="toc-number">2.3.</span> <span class="toc-text">POINT 3. 自制字典</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-4-彩虹表"><span class="toc-number">2.4.</span> <span class="toc-text">POINT 4. 彩虹表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-LOW-级别"><span class="toc-number">3.</span> <span class="toc-text">0x02 LOW 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析"><span class="toc-number">3.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads"><span class="toc-number">3.2.</span> <span class="toc-text">POINT 2. payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Medium-级别"><span class="toc-number">4.</span> <span class="toc-text">0x03 Medium 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-1"><span class="toc-number">4.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-1"><span class="toc-number">4.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-High-级别"><span class="toc-number">5.</span> <span class="toc-text">0x04 High 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-2"><span class="toc-number">5.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-2"><span class="toc-number">5.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-Impossible-级别"><span class="toc-number">6.</span> <span class="toc-text">0x05 Impossible 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-3"><span class="toc-number">6.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-3"><span class="toc-number">6.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-Summary-low-medium-high-防御手段"><span class="toc-number">7.</span> <span class="toc-text">0x06 Summary: low, medium, high 防御手段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-各个等级用了哪些防御手段？"><span class="toc-number">7.1.</span> <span class="toc-text">POINT 1. 各个等级用了哪些防御手段？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-参考文献"><span class="toc-number">8.</span> <span class="toc-text">0x07 参考文献</span></a></li></ol>
+		</div>
+		
+		<p><code>DVWA</code>  <code>靶场</code> </p>
+<h2 id="0x00-暴力破解是啥？"><a href="#0x00-暴力破解是啥？" class="headerlink" title="0x00 暴力破解是啥？"></a>0x00 暴力破解是啥？</h2><hr>
+<p>一看就是和名字一样，就是用字典通过穷举法一个个去猜用户名和密码等等。说到暴力破解，自然会想到burpsuite，一般借助burpsuite来进行爆破，破解密码。</p>
+<h2 id="0x01-burpsuite-的爆破解说"><a href="#0x01-burpsuite-的爆破解说" class="headerlink" title="0x01 burpsuite 的爆破解说"></a>0x01 burpsuite 的爆破解说</h2><hr>
+<h3 id="POINT-1-burpsuite-的爆破方式"><a href="#POINT-1-burpsuite-的爆破方式" class="headerlink" title="POINT 1. burpsuite 的爆破方式"></a>POINT 1. burpsuite 的爆破方式</h3><ol>
+<li><p>Sniper</p>
+<p>针对得上是<font color="red">单一一个变量</font>进行爆破，是最常用的爆破方式。相当于是设定一个字典，字典里面每个位置上把字典payload一个个去尝试，判断是否是符合的。总数是position*payload.(见下图)</p>
+<p><img src="/images/dvwa/bruteForce/pasted-sniper.png" alt="sniper"></p>
+</li>
+<li><p>Battering ram</p>
+<p>这种模式是就是把字典里一个payload同时放到多个position。请求总数就是payload总数。（适合<font color="red">单一变量</font>爆破）</p>
+<p><img src="/images/dvwa/bruteForce/pasted-battering.png" alt="battering"></p>
+</li>
+<li><p>Pitchfork</p>
+<p>这种模式是属于<font color="red">至少有两个变量</font>要爆破的类型。这种方式是一一对应的把payload-a和payload-b放到相对应的position里面进行尝试，如下图：</p>
+<blockquote>
+<p>uname1 –&gt; passwd1<br>uname2 –&gt; passwd2</p>
+</blockquote>
+<p>尝试次数是最小的payload组（最小字典里面）的payload总数。</p>
+</li>
+<li><p>Cluster bomb</p>
+<p>属于<font color="red">至少两个变量</font>要爆破的类型。不同于第三种的，一一对应爆破，这个方式是<font color="red">混用循环方式</font>的。比如有payload-a1、payload-a2、payload-b1和payload-b2，进行这种模式见下图：</p>
+<blockquote>
+<p>uname1 –&gt; passwd1<br>​               –&gt; passwd2<br>uname2 –&gt; passwd2<br>​          –&gt; passwd1</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="POINT-2-burpsuite-自带字典"><a href="#POINT-2-burpsuite-自带字典" class="headerlink" title="POINT 2. burpsuite 自带字典"></a>POINT 2. burpsuite 自带字典</h3><p>burpsuite自带字典是大多是常用的弱密码集和sql语句集。</p>
+<blockquote>
+ <font color="green">p.s. burpSuite里面要使用自带的字典进行爆破的话需要使用pro版本。</font>
+
+</blockquote>
+<h3 id="POINT-3-自制字典"><a href="#POINT-3-自制字典" class="headerlink" title="POINT 3. 自制字典"></a>POINT 3. 自制字典</h3><p>稍后再讲</p>
+<h3 id="POINT-4-彩虹表"><a href="#POINT-4-彩虹表" class="headerlink" title="POINT 4. 彩虹表"></a>POINT 4. 彩虹表</h3><p>这个不是burp自带的字典，是一个用于<a href="https://baike.baidu.com/item/%E5%8A%A0%E5%AF%86%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0" target="_blank" rel="external">加密散列函数</a>逆运算的预先计算好的表, 为破解密码的散列值（或称哈希值、微缩图、摘要、指纹、哈希密文）而准备。一般主流的彩虹表都在100G以上。 </p>
+<h2 id="0x02-LOW-级别"><a href="#0x02-LOW-级别" class="headerlink" title="0x02 LOW 级别"></a>0x02 LOW 级别</h2><hr>
+<h3 id="POINT-1-源码分析"><a href="#POINT-1-源码分析" class="headerlink" title="POINT 1. 源码分析"></a>POINT 1. 源码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"> <span class="comment">//这里只是在一开始判断是否是有提交的选项(详情见下面的isset())</span></div><div class="line">   <span class="comment">/*<span class="doctag">@PROBLEM</span>1*/</span></div><div class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Login'</span> ] ) ) &#123;</div><div class="line"></div><div class="line">	<span class="comment">// Get username</span></div><div class="line">    <span class="comment">/*<span class="doctag">@PROBLEM</span>2*/</span></div><div class="line">	$user = $_GET[ <span class="string">'username'</span> ];<span class="comment">//无过滤</span></div><div class="line"></div><div class="line">    <span class="comment">/*<span class="doctag">@PROBLEM</span>3*/</span></div><div class="line">	<span class="comment">// Get password</span></div><div class="line">	$pass = $_GET[ <span class="string">'password'</span> ];<span class="comment">//无过滤</span></div><div class="line">	$pass = md5( $pass );<span class="comment">//md5加密pass</span></div><div class="line">...</div><div class="line">	<span class="comment">// Check the database</span></div><div class="line">	$qu                         er</div><div class="line">        y  = <span class="string">"SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';"</span>;</div><div class="line">	$result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $query ) </div><div class="line">    	<span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</div><div class="line"></div><div class="line">	<span class="keyword">if</span>( $result &amp;&amp; mysqli_num_rows( $result ) == <span class="number">1</span> ) &#123;</div><div class="line">		<span class="comment">// Get users details</span></div><div class="line">		$row    = mysqli_fetch_assoc( $result );</div><div class="line">		$avatar = $row[<span class="string">"avatar"</span>];</div><div class="line"></div><div class="line">		<span class="comment">// Login successful</span></div><div class="line">		$html .= <span class="string">"&lt;p&gt;Welcome to the password protected area &#123;$user&#125;&lt;/p&gt;"</span>;</div><div class="line">		$html .= <span class="string">"&lt;img src=\"&#123;$avatar&#125;\" /&gt;"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// Login failed</span></div><div class="line">		$html .= <span class="string">"&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;"</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>PROBLEM1: isset() 判断php的变量是否是为空，是否设置了，返回布尔值。这里只是设置了isset检测判断变量是否设置了，没有做防爆破机制，可能导致暴力破解。</li>
+<li>PROBLEM2: username没有做过滤，可能导致SQL注入 。</li>
+<li>PROBLEM3: passwd直接接受参数值，未过滤，之后再md5加密，防止对pass部分进行SQL注入，<font color="red">并不能防止username上面的sql注入，毕竟没有对username上面做过滤。</font></li>
+</ul>
+<h3 id="POINT-2-payloads"><a href="#POINT-2-payloads" class="headerlink" title="POINT 2. payloads"></a>POINT 2. payloads</h3><p><strong>第一种：burpsuite爆破</strong></p>
+<p>先配置好浏览器和burp，如何配置的话，参见0x03 参考文献中”burpsuite抓包使用笔记-by 付锅”和”Lesson 18 POST-HEADER INJECTION-UAGENT FIELD-ERROR BASED”中POINT 2. burp抓包使用。</p>
+<p>首先可以直接下一些常用的管理员密码，比如admin。这个时候页面自动报错爆出：Username and/or password incorrect。</p>
+<p>配置好了之后，首先抓包</p>
+<p><img src="/images/dvwa/bruteForce/pasted-burp抓包.png" alt="burp抓包"></p>
+<p>然后ctrl+i发送到intruder，选择positions卡位，先点击clear取消所有的测试变量，然后选中要测试的地方，点击 add，模式选择cluster bomb</p>
+<p><img src="/images/dvwa/bruteForce/pasted-burp抓包2.png" alt="burp抓包2"></p>
+<p>选择payloads卡位，如下 配置：</p>
+<p><img src="/images/dvwa/bruteForce/pasted-burp抓包3.png" alt="burp抓包3"></p>
+<p>payload set有多少个，就是对应的刚才选中要爆破的变量且排序一致，第一个是username,第二个是password.用相同的方法配置第二个payload。</p>
+<p>根据前面第一步的报错，我们可以利用起来设置正则匹配(option选项卡里面)：</p>
+<p><img src="/images/dvwa/bruteForce/pasted-正则匹配.png" alt="正则匹配"></p>
+<p>爆破出来：</p>
+<p><img src="/images/dvwa/bruteForce/pasted-爆破结果.png" alt="爆破结果"></p>
+<p><strong>第二种：sql注入</strong></p>
+<p>因为username和password输入什么的都没有过滤，可以sql注入。</p>
+<p>随意输入一个密码报错了：Username and/or password incorrect.</p>
+<p>然后语句构造测试：发现单个的单引号或者是双引号进行测试不会爆出语法格式，直接被当做密码的一部分。</p>
+<p>使用admin’测试：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">You have an error in your SQL syntax; <span class="keyword">check</span> the <span class="keyword">manual</span> that corresponds <span class="keyword">to</span> your MySQL <span class="keyword">server</span> <span class="keyword">version</span> <span class="keyword">for</span> the <span class="keyword">right</span> syntax <span class="keyword">to</span> <span class="keyword">use</span> near <span class="string">'120705de7e61c5b322ad798b8ef225a7'' at line 1</span></div></pre></td></tr></table></figure>
+<p> ‘               120705de7e61c5b322ad798b8ef225a7’               ‘</p>
+<p>上面中间部分为我们输入部分，admin被转码，单引号却没有，但是因为单引号输入进去导致了报错，所以语句格式应该是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> username, <span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> username =<span class="string">'username'</span> <span class="keyword">and</span> <span class="keyword">password</span> =<span class="string">'password'</span>.</div></pre></td></tr></table></figure>
+<p>所以sql注入payload可以是：</p>
+<p><img src="/images/dvwa/bruteForce/pasted-bfpayload1.jpg" alt="bfpayload1"></p>
+<p><img src="/images/dvwa/bruteForce/pasted-bfpayload1_res.jpg" alt="bfpayload1_res"></p>
+<blockquote>
+<font color="green">get型的构造为admin’ and ‘1’=’1而post型是admin’  and ‘1’=’1’#因为放入语句后还有password的判断，这个 密码一般是错误的，所以不能用，要自己闭合引号并注释掉后面的语句</font>
+
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//第一行已经恒成立，不加上注释同时加上了第二行的话，就变成恒错（一般情况下是这样的。。不排除猜对了）</div><div class="line"><span class="keyword">select</span> username, <span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> username=<span class="string">'admin'</span> <span class="keyword">and</span> <span class="string">'1'</span>=<span class="string">'1'</span># </div><div class="line"><span class="keyword">and</span> <span class="keyword">password</span>=<span class="string">'admin'</span>;</div></pre></td></tr></table></figure>
+<h2 id="0x03-Medium-级别"><a href="#0x03-Medium-级别" class="headerlink" title="0x03 Medium 级别"></a>0x03 Medium 级别</h2><hr>
+<h3 id="POINT-1-源码分析-1"><a href="#POINT-1-源码分析-1" class="headerlink" title="POINT 1. 源码分析"></a>POINT 1. 源码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">  <span class="comment">//判断是否提交置空</span></div><div class="line">  <span class="comment">/*<span class="doctag">@PROBLEM</span>1*/</span></div><div class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Login'</span> ] ) ) &#123;</div><div class="line"></div><div class="line">    <span class="comment">/*<span class="doctag">@PROBLEM</span>2*/</span></div><div class="line">	$user = $_GET[ <span class="string">'username'</span> ];</div><div class="line">    </div><div class="line">    <span class="comment">/*<span class="doctag">@PROBLEM</span>3*/</span></div><div class="line">	$user = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $user ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line">    </div><div class="line">	$pass = $_GET[ <span class="string">'password'</span> ];</div><div class="line">	$pass = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line">	$pass = md5( $pass );</div><div class="line"><span class="comment">//username和password使用mysqli_real_escape_string转义。</span></div><div class="line"><span class="comment">//password参数md5加密</span></div><div class="line"></div><div class="line">	$query  = <span class="string">"SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';"</span>;</div><div class="line">	$result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</div><div class="line"></div><div class="line">	<span class="keyword">if</span>( $result &amp;&amp; mysqli_num_rows( $result ) == <span class="number">1</span> ) &#123;</div><div class="line">		$row    = mysqli_fetch_assoc( $result );</div><div class="line">		$avatar = $row[<span class="string">"avatar"</span>];</div><div class="line"></div><div class="line">		$html .= <span class="string">"&lt;p&gt;Welcome to the password protected area &#123;$user&#125;&lt;/p&gt;"</span>;</div><div class="line">		$html .= <span class="string">"&lt;img src=\"&#123;$avatar&#125;\" /&gt;"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// Login failed</span></div><div class="line">		<span class="comment">/*<span class="doctag">@PROBLEM</span>4*/</span></div><div class="line">        sleep( <span class="number">2</span> );</div><div class="line">      </div><div class="line">      </div><div class="line">		$html .= <span class="string">"&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>PROBLEM1:isset()判断是否提交，没有做防爆机制</li>
+<li>PROBLEM2和PROBLEM3:username和password没有做防爆机制，会导致暴力破解；同时输入上的过滤是通过mysqli_real_escape将特殊字符（x00，n，r，，’，”，x1a）进行转义了，基本防止了SQL注入。pass部分在后面又用md5进行加密了，所以基本上通过对输入进行编码加密防御了sql注入。</li>
+</ul>
+<blockquote>
+<p>mysqli_real_escape_string()：<br>Characters encoded are NUL (ASCII 0), \n, \r, \, ‘, “, and Control-Z.</p>
+</blockquote>
+<p>  这里解释下PROBLEM3代码：</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//原文是和if等同的三目条件运算符</span></div><div class="line"><span class="comment">//等同于一下代码含义：</span></div><div class="line"><span class="keyword">if</span> ((<span class="keyword">isset</span>($_GLOBALS[___mysqli_ston]))&amp;&amp;(is_object($_GLOBALS[__mysqli_ston])))&#123;</div><div class="line">    $user = mysqli_real_escape_string($GLOBALS[___mysqli_ston], $user);</div><div class="line">&#125;<span class="keyword">else</span>&#123;</div><div class="line">    <span class="keyword">if</span> (trigger_error(<span class="string">"[MySQLConverterToo]Fix tghe mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR))</div><div class="line">	$user = <span class="string">" "</span>;</div><div class="line">    <span class="keyword">else</span>&#123;</div><div class="line">    	$user = <span class="string">" "</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>PROBLEM4: sleep(2)是在登陆失败后先延迟两秒钟，然后才会显示错误信息提示，虽然有延迟，但是并不能完全防爆破（最多就是爆破时间长一点而且两秒钟时间也没多长。）</li>
+</ul>
+<blockquote>
+<p><a href="https://www.freebuf.com/articles/web/116437.html" target="_blank" rel="external">freebuf文章</a>也说sleep(2)不算是防爆破机制</p>
+</blockquote>
+<h3 id="POINT-2-payloads-1"><a href="#POINT-2-payloads-1" class="headerlink" title="POINT 2.  payloads"></a>POINT 2.  payloads</h3><p><strong>第一种：暴力破解</strong></p>
+<p>由于源码中设立了mysqli_real_escape_string()函数的原因，最基本的sql注入方式会失效（但是mysqli_real_escape_string()可以绕过，绕过后如何注入见后面第二种方法）。可以用burp直接暴力破解。</p>
+<p>同low等级中的配置好burp基本就可以开始爆破了。刚才源码分析的一点说到了sleep(2)延迟了错误情况的返回页面，那么在爆破的时候爆破的时间肯定会因此而受到影响，时间明显变长。</p>
+<p><strong>第二种：cookie修改绕过</strong></p>
+<p>抓取cookie里面发现有security选项，修改成low的话，后续操作就和low一样了。</p>
+<p>(下面的这个方法是<a href="http://blog.csdn.net/scnu_jiechao/article/details/54098603" target="_blank" rel="external">DVWA - Brute Force (low, medium, high) by jchalex</a>)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">headers = &#123;</div><div class="line">    <span class="string">'Cookie'</span>: <span class="string">'PHPSESSID=h6r8555q2obvo388r4u50lg397; security=medium'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="0x04-High-级别"><a href="#0x04-High-级别" class="headerlink" title="0x04 High 级别"></a>0x04 High 级别</h2><hr>
+<h3 id="POINT-1-源码分析-2"><a href="#POINT-1-源码分析-2" class="headerlink" title="POINT 1. 源码分析"></a>POINT 1. 源码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Login'</span> ] ) ) &#123;</div><div class="line"></div><div class="line">    <span class="comment">/*PROBLEM1*/</span></div><div class="line">    checkToken( $_REQUEST[ <span class="string">'user_token'</span> ], $_SESSION[ <span class="string">'session_token'</span> ], <span class="string">'index.php'</span> );</div><div class="line"></div><div class="line">    <span class="comment">/*PROBLEM2*/</span></div><div class="line">    $user = $_GET[ <span class="string">'username'</span> ];</div><div class="line">    $user = stripslashes( $user );</div><div class="line">	$user = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $user ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line">  	</div><div class="line">    <span class="comment">/*PROBLEM3*/</span></div><div class="line">	$pass = $_GET[ <span class="string">'password'</span> ];</div><div class="line">	$pass = stripslashes( $pass );</div><div class="line">	$pass = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line">	<span class="comment">/*PROBLEM4*/</span></div><div class="line">    $pass = md5( $pass );</div><div class="line">    </div><div class="line">	<span class="comment">// Check database</span></div><div class="line">	$query  = <span class="string">"SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';"</span>;</div><div class="line">	$result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</div><div class="line"></div><div class="line">	<span class="keyword">if</span>( $result &amp;&amp; mysqli_num_rows( $result ) == <span class="number">1</span> ) &#123;</div><div class="line">		<span class="comment">// Get users details</span></div><div class="line">		$row    = mysqli_fetch_assoc( $result );</div><div class="line">		$avatar = $row[<span class="string">"avatar"</span>];</div><div class="line"></div><div class="line">		<span class="comment">// Login successful</span></div><div class="line">		$html .= <span class="string">"&lt;p&gt;Welcome to the password protected area &#123;$user&#125;&lt;/p&gt;"</span>;</div><div class="line">		$html .= <span class="string">"&lt;img src=\"&#123;$avatar&#125;\" /&gt;"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// Login failed</span></div><div class="line">		sleep( rand( <span class="number">0</span>, <span class="number">3</span> ) ); </div><div class="line">      <span class="comment">/*表示延迟的时间在随机数0-3之间*/</span></div><div class="line">      </div><div class="line">		$html .= <span class="string">"&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Generate Anti-CSRF token</span></div><div class="line">generateSessionToken();</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>根据提示已经显示防御了CSRF，使用的是checkToken</li>
+<li>对输入都做了反斜杠的去除和控制字符的转义，sql注入猜测多半不行。</li>
+<li>密码md5加密，考虑爆破</li>
+</ol>
+<h3 id="POINT-2-payloads-2"><a href="#POINT-2-payloads-2" class="headerlink" title="POINT 2.  payloads"></a>POINT 2.  payloads</h3><p>由于上面的源码分析，知道了现在的代码里面是有对sql注入有很多的防御，所以尝试sql注入成功的可能性不高。</p>
+<p>虽然看网上的大佬们写了很多解密方法，但是个人水平一般，没有搞透彻，所以暂时的话，不做具体解析，解法见参考文献的第一条。</p>
+<h2 id="0x05-Impossible-级别"><a href="#0x05-Impossible-级别" class="headerlink" title="0x05 Impossible 级别"></a>0x05 Impossible 级别</h2><hr>
+<h3 id="POINT-1-源码分析-3"><a href="#POINT-1-源码分析-3" class="headerlink" title="POINT 1. 源码分析"></a>POINT 1. 源码分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Login'</span> ] ) ) &#123;</div><div class="line">  <span class="comment">/*防御CSRF*/</span></div><div class="line">	<span class="comment">// Check Anti-CSRF token</span></div><div class="line">	checkToken( $_REQUEST[ <span class="string">'user_token'</span> ], $_SESSION[ <span class="string">'session_token'</span> ], <span class="string">'index.php'</span> );</div><div class="line"></div><div class="line">	<span class="comment">// Sanitise username input</span></div><div class="line">	$user = $_POST[ <span class="string">'username'</span> ];</div><div class="line">  </div><div class="line">  <span class="comment">/*stripslashes去除反斜杠*/</span></div><div class="line">	$user = stripslashes( $user );</div><div class="line">	$user = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $user ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line"><span class="comment">/*使用mysqli_real_escape_string()转义控制字符本身的特殊含义*/</span></div><div class="line">  </div><div class="line">	<span class="comment">// Sanitise password input</span></div><div class="line">	$pass = $_POST[ <span class="string">'password'</span> ];</div><div class="line">  </div><div class="line">  <span class="comment">/*同$user*/</span></div><div class="line">	$pass = stripslashes( $pass );</div><div class="line">	$pass = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</div><div class="line">	$pass = md5( $pass );</div><div class="line"><span class="comment">/*password加密md5*/</span></div><div class="line">  </div><div class="line">  <span class="comment">/*设置登录失败次数，密码爆破机制*/</span></div><div class="line">	<span class="comment">// Default values</span></div><div class="line">	$total_failed_login = <span class="number">3</span>;</div><div class="line">	$lockout_time       = <span class="number">15</span>;</div><div class="line">	$account_locked     = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">	<span class="comment">// Check the database (Check user information)</span></div><div class="line">	$data = $db-&gt;prepare( <span class="string">'SELECT failed_login, last_login FROM users WHERE user = (:user) LIMIT 1;'</span> );</div><div class="line">	$data-&gt;bindParam( <span class="string">':user'</span>, $user, PDO::PARAM_STR );</div><div class="line">	$data-&gt;execute();</div><div class="line">	$row = $data-&gt;fetch();</div><div class="line"></div><div class="line">	<span class="comment">// Check to see if the user has been locked out.</span></div><div class="line">	<span class="keyword">if</span>( ( $data-&gt;rowCount() == <span class="number">1</span> ) &amp;&amp; ( $row[ <span class="string">'failed_login'</span> ] &gt;= $total_failed_login ) )  &#123;</div><div class="line">    </div><div class="line">		<span class="comment">// User locked out.  Note, using this method would allow for user enumeration!</span></div><div class="line">		<span class="comment">//$html .= "&lt;pre&gt;&lt;br /&gt;This account has been locked due to too many incorrect logins.&lt;/pre&gt;";</span></div><div class="line"></div><div class="line">		<span class="comment">// Calculate when the user would be allowed to login again</span></div><div class="line">		$last_login = $row[ <span class="string">'last_login'</span> ];</div><div class="line">		$last_login = strtotime( $last_login );</div><div class="line">		$timeout    = strtotime( <span class="string">"&#123;$last_login&#125; +&#123;$lockout_time&#125; minutes"</span> );</div><div class="line">		$timenow    = strtotime( <span class="string">"now"</span> );</div><div class="line"></div><div class="line">		<span class="comment">// Check to see if enough time has passed, if it hasn't locked the account</span></div><div class="line">		<span class="keyword">if</span>( $timenow &gt; $timeout )</div><div class="line">			$account_locked = <span class="keyword">true</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Check the database (if username matches the password)</span></div><div class="line">	$data = $db-&gt;prepare( <span class="string">'SELECT * FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;'</span> );</div><div class="line">	$data-&gt;bindParam( <span class="string">':user'</span>, $user, PDO::PARAM_STR);</div><div class="line">	$data-&gt;bindParam( <span class="string">':password'</span>, $pass, PDO::PARAM_STR );</div><div class="line">	$data-&gt;execute();</div><div class="line">	$row = $data-&gt;fetch();</div><div class="line"></div><div class="line">	<span class="comment">// If its a valid login...</span></div><div class="line">	<span class="keyword">if</span>( ( $data-&gt;rowCount() == <span class="number">1</span> ) &amp;&amp; ( $account_locked == <span class="keyword">false</span> ) ) &#123;</div><div class="line">    </div><div class="line">		<span class="comment">// Get users details</span></div><div class="line">		$avatar       = $row[ <span class="string">'avatar'</span> ];</div><div class="line">		$failed_login = $row[ <span class="string">'failed_login'</span> ];</div><div class="line">		$last_login   = $row[ <span class="string">'last_login'</span> ];</div><div class="line"></div><div class="line">		<span class="comment">// Login successful</span></div><div class="line">		$html .= <span class="string">"&lt;p&gt;Welcome to the password protected area &lt;em&gt;&#123;$user&#125;&lt;/em&gt;&lt;/p&gt;"</span>;</div><div class="line">		$html .= <span class="string">"&lt;img src=\"&#123;$avatar&#125;\" /&gt;"</span>;</div><div class="line"></div><div class="line">		<span class="comment">// Had the account been locked out since last login?</span></div><div class="line">		<span class="keyword">if</span>( $failed_login &gt;= $total_failed_login ) &#123;</div><div class="line">        </div><div class="line">			$html .= <span class="string">"&lt;p&gt;&lt;em&gt;Warning&lt;/em&gt;: Someone might of been brute forcing your account.&lt;/p&gt;"</span>;</div><div class="line">			$html .= <span class="string">"&lt;p&gt;Number of login attempts: &lt;em&gt;&#123;$failed_login&#125;&lt;/em&gt;.&lt;br /&gt;Last login attempt was at: &lt;em&gt;$&#123;last_login&#125;&lt;/em&gt;.&lt;/p&gt;"</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// Reset bad login count</span></div><div class="line">		$data = $db-&gt;prepare( <span class="string">'UPDATE users SET failed_login = "0" WHERE user = (:user) LIMIT 1;'</span> );</div><div class="line">		$data-&gt;bindParam( <span class="string">':user'</span>, $user, PDO::PARAM_STR );</div><div class="line">		$data-&gt;execute();</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">    </div><div class="line">		<span class="comment">// Login failed</span></div><div class="line">		sleep( rand( <span class="number">2</span>, <span class="number">4</span> ) );</div><div class="line"></div><div class="line">		<span class="comment">// Give the user some feedback</span></div><div class="line">		$html .= <span class="string">"&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;br /&gt;&lt;br/&gt;Alternative, the account has been locked because of too many failed logins.&lt;br /&gt;If this is the case, &lt;em&gt;please try again in &#123;$lockout_time&#125; minutes&lt;/em&gt;.&lt;/pre&gt;"</span>;</div><div class="line"></div><div class="line">		<span class="comment">// Update bad login count</span></div><div class="line">		$data = $db-&gt;prepare( <span class="string">'UPDATE users SET failed_login = (failed_login + 1) WHERE user = (:user) LIMIT 1;'</span> );</div><div class="line">		$data-&gt;bindParam( <span class="string">':user'</span>, $user, PDO::PARAM_STR );</div><div class="line">		$data-&gt;execute();</div><div class="line">	&#125;</div><div class="line">  <span class="comment">/*采用了PDO机制防御sql注入*/</span></div><div class="line"></div><div class="line">	<span class="comment">// Set the last login time</span></div><div class="line">	$data = $db-&gt;prepare( <span class="string">'UPDATE users SET last_login = now() WHERE user = (:user) LIMIT 1;'</span> );</div><div class="line">	$data-&gt;bindParam( <span class="string">':user'</span>, $user, PDO::PARAM_STR );</div><div class="line">	$data-&gt;execute();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Generate Anti-CSRF token</span></div><div class="line">generateSessionToken();</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>添加CSRF防御机制Anti-CSRFtoken</li>
+<li>添加stripslashes()去除反斜杠</li>
+<li>输入使用mysqli_real_escape_string()转义控制字符</li>
+<li>密码md5加密</li>
+<li>记录登录错误次数。</li>
+<li>采用PDO机制防御sql注入</li>
+</ol>
+<h3 id="POINT-2-payloads-3"><a href="#POINT-2-payloads-3" class="headerlink" title="POINT 2.  payloads"></a>POINT 2.  payloads</h3><p>这个级别感觉一般是破解不了，如果是大型网站的话可以从其他方面入手攻入了。</p>
+<h2 id="0x06-Summary-low-medium-high-防御手段"><a href="#0x06-Summary-low-medium-high-防御手段" class="headerlink" title="0x06 Summary: low, medium, high 防御手段"></a>0x06 Summary: low, medium, high 防御手段</h2><hr>
+<h3 id="POINT-1-各个等级用了哪些防御手段？"><a href="#POINT-1-各个等级用了哪些防御手段？" class="headerlink" title="POINT 1. 各个等级用了哪些防御手段？"></a>POINT 1. 各个等级用了哪些防御手段？</h3><p>各个等级的防御手段是各不同的：</p>
+<ol>
+<li>添加Anti-CSRFtoken预防无脑爆破的校验手段</li>
+<li>添加sleep延时，降低爆破速度</li>
+<li>增加登录错误的机制</li>
+<li>采用PDO机制防御sql注入，因为不能用他的扩展执行任何数据库的数据，而sql注入便是“闭合”原来的语句，根据逻辑构造自己的语句放进去并执行。</li>
+<li>mysqli_real_escape_string()转义控制字符</li>
+<li>stripslashes()去除反斜杠</li>
+</ol>
+<p>后面出现的新的防御手段，我更多系统学习了后，详情后期补充。</p>
+<blockquote>
+<font color="green">PS:    <a href="http://www.cnblogs.com/pinocchioatbeijing/archive/2012/03/20/2407869.html" target="_blank" rel="external">PHP学习笔记之PDO</a></font>
+
+</blockquote>
+<h2 id="0x07-参考文献"><a href="#0x07-参考文献" class="headerlink" title="0x07 参考文献"></a>0x07 参考文献</h2><hr>
+<ul>
+<li><p><a href="http://www.freebuf.com/articles/web/116437.html#" target="_blank" rel="external">新手指南：DVWA-1.9全级别教程之Brute Force</a> </p>
+</li>
+<li><p><a href="https://baike.baidu.com/item/%E5%BD%A9%E8%99%B9%E8%A1%A8/689313?fr=aladdin" target="_blank" rel="external">彩虹表——百度百科</a></p>
+</li>
+<li><p><a href="https://app.yinxiang.com/shard/s5/nl/16532434/b6fdb30b-105b-483d-8c6c-00358461b20a/" target="_blank" rel="external">burpsuite抓包使用笔记-by 付锅</a></p>
+</li>
+<li><p><a href="onenote://LAPTOP-86EBKE98/Users/Alexandria/Documents/OneNote%20笔记本/FORMORE/sql-labs和sql%20injection.one#Lesson%2018%20POST-HEADER%20INJECTION-UAGENT%20FIELD-ERROR%20BASED&amp;section-id={3BCD96E1-5A4A-4A81-9200-D62699D5ACB5}&amp;page-id={59A68290-EB6F-475D-8D18-C891CE7F5279}&amp;end" target="_blank" rel="external">Lesson 18 POST-HEADER INJECTION-UAGENT FIELD-ERROR BASED</a></p>
+</li>
+<li><p><a href="https://segmentfault.com/q/1010000006015688" target="_blank" rel="external">求mysql_real_escape_string()防注入详解</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/Safe3/archive/2008/08/22/1274095.html" target="_blank" rel="external">mysql_real_escape_string()绕过</a></p>
+</li>
+<li><p><a href="http://www.hacksec.cn/Penetration-test/585.html" target="_blank" rel="external">跟着DVWA学Web安全开发</a></p>
+</li>
+<li><p><a href="http://blog.csdn.net/scnu_jiechao/article/details/54098603" target="_blank" rel="external">DVWA - Brute Force (low, medium, high) by jchalex</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/pinocchioatbeijing/archive/2012/03/20/2407869.html" target="_blank" rel="external">PHP学习笔记之PDO</a> </p>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://aiapple97.github.io/2018/11/08/DVWA 之小白学习NOTES--暴力破解/" data-title="DVWA 之小白学习NOTES--暴力破解 | 0aspir1ng0 Paradise" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/11/24/GIFJavascript Polyglot 滥用GIF、tag和MIME类型成灾/" title="GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/11/07/通过mentoHust认证实现校园网锐捷wifi共享/"  title="通过mentoHust认证实现校园网锐捷wifi共享">
+ <strong>NEXT:</strong><br/> 
+ <span>通过mentoHust认证实现校园网锐捷wifi共享
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	
+	<div class="ds-thread" data-title="DVWA 之小白学习NOTES--暴力破解" data-thread-key="DVWA 之小白学习NOTES--暴力破解" data-author-key="0aspir1ng0" data-url="http://aiapple97.github.io/post/DVWA 之小白学习NOTES--暴力破解"></div>
+	
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-暴力破解是啥？"><span class="toc-number">1.</span> <span class="toc-text">0x00 暴力破解是啥？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-burpsuite-的爆破解说"><span class="toc-number">2.</span> <span class="toc-text">0x01 burpsuite 的爆破解说</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-burpsuite-的爆破方式"><span class="toc-number">2.1.</span> <span class="toc-text">POINT 1. burpsuite 的爆破方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-burpsuite-自带字典"><span class="toc-number">2.2.</span> <span class="toc-text">POINT 2. burpsuite 自带字典</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-3-自制字典"><span class="toc-number">2.3.</span> <span class="toc-text">POINT 3. 自制字典</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-4-彩虹表"><span class="toc-number">2.4.</span> <span class="toc-text">POINT 4. 彩虹表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-LOW-级别"><span class="toc-number">3.</span> <span class="toc-text">0x02 LOW 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析"><span class="toc-number">3.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads"><span class="toc-number">3.2.</span> <span class="toc-text">POINT 2. payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Medium-级别"><span class="toc-number">4.</span> <span class="toc-text">0x03 Medium 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-1"><span class="toc-number">4.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-1"><span class="toc-number">4.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-High-级别"><span class="toc-number">5.</span> <span class="toc-text">0x04 High 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-2"><span class="toc-number">5.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-2"><span class="toc-number">5.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-Impossible-级别"><span class="toc-number">6.</span> <span class="toc-text">0x05 Impossible 级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-源码分析-3"><span class="toc-number">6.1.</span> <span class="toc-text">POINT 1. 源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-2-payloads-3"><span class="toc-number">6.2.</span> <span class="toc-text">POINT 2.  payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-Summary-low-medium-high-防御手段"><span class="toc-number">7.</span> <span class="toc-text">0x06 Summary: low, medium, high 防御手段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POINT-1-各个等级用了哪些防御手段？"><span class="toc-number">7.1.</span> <span class="toc-text">POINT 1. 各个等级用了哪些防御手段？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-参考文献"><span class="toc-number">8.</span> <span class="toc-text">0x07 参考文献</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/aiapple97" target="_blank" title="github"></a>
+		
+		
+		
+		<a href="https://zhihu.com/people/cristal-57" target="_blank" title="zhihu"></a>
+		
+	</div>
+</div>
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+      <li><a href="http://aiapple97.github.io" target="_blank" title="Hexo">0aspir1ng0 Paradise</a></li>
+      <li><a href="http://cl0und.github.io/" target="_blank" title="coney">cl0und's blog</a></li>
+      <li><a href="http://eagerseven.cn" target="_blank" title="coney">eagerseven's blog</a></li>
+      <li><a href="http://har01d.me" target="_blank" title="coney">har01d's blog</a></li>
+      <li><a href="https://9955zhangxichen.github.io/" target="_blank" title="coney">9955zhangxichen's blog</a></li>
+    </ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+    
+            <p class="copyright"> © 2018 
+		
+		<a href="http://aiapple97.github.io" target="_blank" title="0aspir1ng0">0aspir1ng0</a>
+		
+            && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>
+            </div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '5';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', '', '');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
+

